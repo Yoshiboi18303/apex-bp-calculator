@@ -1,0 +1,49 @@
+{
+  "name": "@yoshiboi18303/apex-bp-calculator",
+  "version": "1.0.0",
+  "description": "A CLI and package for providing quick calculations for how many stars are required to get to a certain level in the Apex Battle Pass!",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "tsc",
+    "prelink": "npm run build",
+    "link": "npm link",
+    "prelink:force": "npm run build",
+    "link:force": "npm link --force",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yoshiboi18303/apex-bp-calculator.git"
+  },
+  "keywords": [
+    "apex",
+    "apex-bp",
+    "cli",
+    "bp-calculator",
+    "apex-bp-calculator"
+  ],
+  "author": "Yoshiboi18303",
+  "license": "MIT",
+  "types": "./dist/src/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/Yoshiboi18303/apex-bp-calculator/issues"
+  },
+  "homepage": "https://github.com/Yoshiboi18303/apex-bp-calculator#readme",
+  "bin": {
+    "abp": "dist/cli/index.js"
+  },
+  "dependencies": {
+    "kleur": "^4.1.5",
+    "prompts": "^2.4.2",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.3",
+    "@types/prompts": "^2.4.4",
+    "@types/yargs": "^17.0.24",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.1.6"
+  }
+}
