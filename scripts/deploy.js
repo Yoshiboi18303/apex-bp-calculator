@@ -20,10 +20,29 @@ async function main() {
         },
         {
             type: "confirm",
+            name: "has2FA",
+            message: "Do you have 2FA on your npm account?"
+        },
+        {
+            type: (prev) => prev ? "password" : null,
+            name: "2faCode",
+            message: "Please enter your 2FA code (this is not sent anywhere on the dark web)",
+            validate: (value) => {
+                if (value.length > 6 || value.length < 6) return "Your 2FA code should be 6 digits, no more, no less."
+                else return true;
+            }
+        },
+        {
+            type: "confirm",
             name: "isSure",
             message: "Are you sure you're ready to deploy?"
+        },
+    ], {
+        onCancel: () => {
+            console.log(kleur.red("Prompting cancelled."));
+            process.exit(0);
         }
-    ]);
+    });
 
     if (!answers.isSure) {
         console.log(kleur.yellow("Close one! Deployment cancelled."));
@@ -51,7 +70,7 @@ async function main() {
     console.log(kleur.green("Push done!"));
     console.log(kleur.cyan("Publishing to npm..."));
 
-    const deploymentMessage = await exec("npm publish --access=public");
+    const deploymentMessage = await exec(answers.has2FA ? `npm publish --access=public --otp=${answers["2faCode"]}` : "npm publish --access=public");
 
     if (deploymentMessage.stderr.length) {
         console.log(kleur.red("Deployment might've failed, please read the logs below.\n\n"));

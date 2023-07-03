@@ -9,7 +9,9 @@
     "link": "npm link",
     "prelink:force": "npm run build",
     "link:force": "npm link --force",
-    "test": "jest"
+    "test": "jest",
+    "predeploy": "npm run build",
+    "deploy": "node scripts/deploy.js"
   },
   "repository": {
     "type": "git",
