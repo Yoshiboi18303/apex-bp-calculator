@@ -25,7 +25,10 @@ async function main() {
         }
     ]);
 
-    if (!answers.isSure) console.log(kleur.yellow("Close one! Deployment cancelled."));
+    if (!answers.isSure) {
+        console.log(kleur.yellow("Close one! Deployment cancelled."));
+        process.exit(0);
+    }
 
     console.log(kleur.cyan("Pushing to GitHub..."))
 
