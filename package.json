@@ -1,6 +1,6 @@
 {
   "name": "@yoshiboi18303/apex-bp-calculator",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A CLI and package for providing quick calculations for how many stars are required to get to a certain level in the Apex Battle Pass!",
   "main": "dist/src/index.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "link:force": "npm link --force",
     "test": "jest",
     "predeploy": "npm run build",
-    "deploy": "node scripts/deploy.js"
+    "deploy": "node scripts/deploy.js",
+    "deploy:nobuild": "node scripts/deploy.js"
   },
   "repository": {
     "type": "git",

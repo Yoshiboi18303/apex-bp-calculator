@@ -46,7 +46,7 @@ console.log(bpCalculator(1, 10, 0)); // Replace the arguments with whatever you 
 
 ## Website
 
-Coming soon! Might be made with **[Docusaurus](https://docusaurus.io)**.
+You can view the website **[here](https://yoshiboi18303.github.io/bp-calculator/)**
 
 ## License
 
