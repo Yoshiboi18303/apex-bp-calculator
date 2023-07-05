@@ -23,14 +23,13 @@
 // SOFTWARE.
 
 import yargs from "yargs";
-import { bold, cyan, green, yellow } from "kleur/colors";
+import { bold, cyan, green, red, yellow } from "kleur/colors";
 import { hideBin } from "yargs/helpers";
 import cli from "../package.json";
-import { promisify } from "util";
-import { exec as execSync } from "child_process";
-import { calculate, getPrompts } from "../utils/";
-
-const exec = promisify(execSync);
+import { calculate, checkForUpdates, exec, getPrompts } from "../utils/";
+import Box from "cli-box";
+import prompts from "prompts";
+import { Spinner } from "clui";
 
 function logVersion(name: string, version: string) {
   console.log(`${cyan(`${name}:`)} ${green(version)}`);
@@ -54,7 +53,72 @@ async function main() {
     .option("version", {
       type: "boolean",
       describe: "Shows the CLI version.",
+    })
+    .option("no-update", {
+      alias: ["nu"],
+      type: "boolean",
+      describe:
+        'If true, do not ask to update the CLI version. Example: "--nu=true"',
     }).argv;
+
+  if (args.noUpdate !== true) {
+    const updateCheck = await checkForUpdates();
+
+    if (updateCheck.newerVersionAvailable) {
+      const command = `npm install -g ${cli.name}@${updateCheck.newVersion}`;
+      const updateAvailableBox = new Box(
+        {
+          fullscreen: true,
+          stringify: false,
+        },
+        `${yellow(
+          `Update available! ${cyan(updateCheck.oldVersion!)} > ${green(
+            updateCheck.newVersion!
+          )}`
+        )}\n\n${green("Ready to update?")} Run \`${cyan(
+          command
+        )}\` to update,\nOR answer yes to the following question!`
+      );
+
+      console.log(yellow(updateAvailableBox.stringify()));
+
+      const answer = await prompts({
+        type: "confirm",
+        name: "updateNow",
+        message: "Should we update the CLI for the next time you use it?",
+      });
+
+      if (!answer.updateNow) {
+        console.log(
+          cyan("That's fine! You can always update whenever you want!")
+        );
+      } else {
+        const updatingSpinner = new Spinner("Updating...");
+
+        updatingSpinner.start();
+
+        await exec(command)
+          .then(() => {
+            updatingSpinner.stop();
+
+            console.log(
+              green("Update should've completed, continue normal operations!")
+            );
+          })
+          .catch((error) => {
+            updatingSpinner.stop();
+
+            console.error(red("Failed to update the CLI."));
+            console.error(error);
+
+            console.log(
+              cyan("You'll have to manually update the CLI by running:")
+            );
+            console.log(yellow(command));
+          });
+      }
+    }
+  }
 
   if (args.version) {
     const npmVersion = (await exec("npm --version")).stdout;
